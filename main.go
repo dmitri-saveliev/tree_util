@@ -41,13 +41,7 @@ func printDir(out io.Writer, path string, showFiles bool, level int, lastDirLvl 
 	}
 
 	if !showFiles {
-		var onlyDirs []os.DirEntry
-		for _, entry := range entries {
-			if entry.IsDir() {
-				onlyDirs = append(onlyDirs, entry)
-			}
-		}
-		entries = onlyDirs
+		entries = getOnlyDirs(entries)
 	}
 
 	sort.Slice(entries, func(i, j int) bool {
@@ -98,4 +92,14 @@ func printPrefix(out io.Writer, level int, isLast bool, lastDirLvl int) {
 	} else {
 		fmt.Fprint(out, "├───")
 	}
+}
+
+func getOnlyDirs(entries []os.DirEntry) []os.DirEntry {
+	var onlyDirs []os.DirEntry
+	for _, entry := range entries {
+		if entry.IsDir() {
+			onlyDirs = append(onlyDirs, entry)
+		}
+	}
+	return onlyDirs
 }
